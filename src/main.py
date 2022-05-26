@@ -1,12 +1,15 @@
-from find_duplicates import find_duplicates
-from find_empty import find_empty
-from find_namesakes import find_namesakes
-from find_mode import find_mode
-from find_symbols import find_symbols
-from find_endings import find_endings
+from config import load_config
+from handle_duplicates import find_duplicates
+from handle_empty import find_empty
+from handle_namesakes import find_namesakes
+from handle_mode import find_mode
+from handle_symbols import find_symbols
+from handle_endings import find_endings
 from flat_walk import flat_walk_chained
 from itertools import chain
 from pathlib import Path
+
+config = load_config()
 
 all_files = list(flat_walk_chained(Path('X'), Path('Y1'), Path('Y2')))
 
@@ -29,13 +32,13 @@ for f in find_empty(all_files):
     print(f"   {f}")
 
 print("endings")
-for f in find_endings(all_files, ['.temp', '~']):
+for f in find_endings(all_files, config.endings):
     print(f"   {f}")
 
 print("symbols")
-for f in find_symbols(all_files, '"\':;*?$#|\\'):
+for f in find_symbols(all_files, config.symbols):
     print(f"   {f}")
 
 print("mode")
-for f in find_mode(all_files, '_rw-rw-rw-'):
+for f in find_mode(all_files, config.pattern):
     print(f"   {f}")

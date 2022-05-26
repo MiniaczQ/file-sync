@@ -1,0 +1,8 @@
+{
+    "pattern": "_rw_rw_rw_",
+    "symbols": "\"':;*?$#|\\",
+    "endings": [
+        ".temp",
+        "~"
+    ]
+}

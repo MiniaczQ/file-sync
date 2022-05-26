@@ -19,6 +19,9 @@ def quick_hash(path):
     return hasher.hexdigest()
 
 def _paired_quick_hash(file):
+    '''
+    Hash and file pair.
+    '''
     return (quick_hash(file), file)
 
 def mass_hash(iter):
