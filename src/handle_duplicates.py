@@ -1,9 +1,11 @@
 from collections import defaultdict
 import filecmp
+from functools import lru_cache
 from itertools import count
 
 from hash import mass_hash
 
+@lru_cache(None)
 def _cmp(a, b) -> bool:
     '''
     Deeply compares files `a` and `b`.

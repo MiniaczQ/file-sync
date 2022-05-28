@@ -17,10 +17,11 @@ class Config:
     '''
     Structure that holds configuration data.
     '''
-    def __init__(self, pattern, symbols, endings):
+    def __init__(self, pattern, symbols, endings, substitute):
         self.pattern = pattern
         self.symbols = symbols
         self.endings = endings
+        self.substitute = substitute
 
 def load_config():
     '''
@@ -28,23 +29,19 @@ def load_config():
     '''
     with open('config.json', 'r') as f:
         config = json.load(f)
-        for key in config.keys():
-            if key not in ['pattern', 'symbols', 'endings']:
-                print(f'Invalid configuration parameter `{key}`.')
-                exit()
-
-        pattern = config.get('pattern', '__________')
+        
+        pattern = config.pop('pattern', '__________')
         if type(pattern) != str:
             print('Configuration parameter `pattern` has to be a string.')
             exit()
         _validate_mode_pattern(pattern)
         
-        symbols = config.get('symbols', '')
+        symbols = config.pop('symbols', '')
         if type(symbols) != str:
             print('Configuration parameter `symbols` has to be a string.')
             exit()
         
-        endings = config.get('endings', [])
+        endings = config.pop('endings', [])
         if type(endings) != list:
             print('Configuration parameter `endings` has to be a list of strings.')
             exit()
@@ -52,5 +49,17 @@ def load_config():
             if type(ending) != str:
                 print('Configuration parameter `endings` has to be a list of strings.')
                 exit()
-    
-        return Config(pattern, symbols, endings)
+        
+        substitute = config.pop('substitute', '_')
+        if type(substitute) != str:
+            print('Configuration parameter `substitute` has to be a string.')
+            exit()
+        if len(substitute) != 1:
+            print('Configuration parameter `substitute` has to be exactly 1 character.')
+            exit()
+
+        for key in config.keys():
+            print(f'Invalid configuration parameter `{key}`.')
+            exit()
+
+        return Config(pattern, symbols, endings, substitute)

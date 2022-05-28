@@ -1,6 +1,7 @@
 {
     "pattern": "_rw_rw_rw_",
     "symbols": "\"':;*?$#|\\",
+    "substitute": "_",
     "endings": [
         ".temp",
         "~"
