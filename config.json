@@ -1,5 +1,5 @@
 {
-    "pattern": "_rw_rw_rw_",
+    "pattern": "rw-r_-r--",
     "symbols": "\"':;*?$#|\\",
     "substitute": "_",
     "endings": [
