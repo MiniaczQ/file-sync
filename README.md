@@ -28,7 +28,7 @@ Plik konfiguracyjny można podać we fladze `--config <ścieżka>`.
 `python3 manage.py -h`
 
 ## Przekopiowanie brakujących plików z katalogu Y i Z do X bez interakcji
-`python3 manage.py test_dirs/X -s test_dirs/Y -s test_dirs/Z -c`
+`python3 manage.py test_dirs/X -s test_dirs/Y -s test_dirs/Z -c cp-all`
 
 ## Usunięcie plików pustych, tymczasowych oraz plików identycznych treścią lub nazwą z katalogu X. (z interakcją, w tej kolejności)
 `python3 manage.py test_dirs/X -e -t -n -d`
