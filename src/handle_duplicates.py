@@ -41,27 +41,33 @@ def _suspect_groups_iter(iter):
         yield (suspect_groups[hash], file)
 
 
-def _duplicate_groups_iter(suspect_groups):
+class DuplicateGroupsIter:
     """
-    Returns an iterator over pairs of duplicate group id and file.
+    Iterator over pairs of duplicate group id and file.
     """
-    id = count(0, 1)
-    duplicate_groups = defaultdict(dict)
-
-    for si, file in suspect_groups:
-        if si not in duplicate_groups:
-            i = next(id)
-            duplicate_groups[si][i] = file
-            yield (i, file)
+    def __init__(self, iter):
+        self.id = count(0, 1)
+        self.groups = defaultdict(dict)
+        self.iter = iter
+    
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        (si, file) = next(self.iter)
+        if si not in self.groups:
+            i = next(self.id)
+            self.groups[si][i] = file
+            return (i, file)
         else:
-            r = _find(duplicate_groups[si].items(), lambda f: _cmp(f, file))
+            r = _find(self.groups[si].items(), lambda f: _cmp(f, file))
             if r is None:
-                i = next(id)
-                duplicate_groups[si][i] = file
-                yield (i, file)
+                i = next(self.id)
+                self.groups[si][i] = file
+                return (i, file)
             else:
                 i = r
-                yield (i, file)
+                return (i, file)
 
 
 def handle_duplicates(target, global_option):
@@ -70,18 +76,15 @@ def handle_duplicates(target, global_option):
     """
     files = flat_walk(target)
     suspect_groups = _suspect_groups_iter(files)
-    duplicate_groups = _duplicate_groups_iter(suspect_groups)
+    duplicate_groups = DuplicateGroupsIter(suspect_groups)
     for_removal = []
 
-    groups = {}
     for id, file in duplicate_groups:
-        if id not in groups:
-            groups[id] = file
-        else:
+        if id in duplicate_groups.groups:
             (global_option, new_path) = _handle_pair(
-                for_removal, global_option, groups[id], file
+                for_removal, global_option, duplicate_groups.groups[id], file
             )
-            groups[id] = new_path
+            duplicate_groups.groups[id] = new_path
             if global_option == "skip":
                 break
 
