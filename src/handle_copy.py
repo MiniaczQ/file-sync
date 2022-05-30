@@ -1,4 +1,5 @@
 from collections import deque
+from os import makedirs
 from pathlib import Path
 from shutil import copy
 from .flat_walk import flat_walk
@@ -52,9 +53,11 @@ def _handle(global_option, file: Path, target: Path, source: Path):
         (all, option) = prompt(_prep_message(file, new_file), _answer_handler)
         if all:
             global_option = option
-
     if option == "cp-all":
         if not new_file.exists():
+            parent = new_file.parent
+            if not parent.exists():
+                makedirs(parent)
             copy(file, new_file)
         else:
             print(f"Cannot copy file `{file}`, because `{new_file}` already exists.")
