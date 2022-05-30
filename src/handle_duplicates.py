@@ -48,6 +48,7 @@ class DuplicateGroupsIter:
     def __init__(self, iter):
         self.id = count(0, 1)
         self.groups = defaultdict(dict)
+        self.hash_idx = {}
         self.iter = iter
     
     def __iter__(self):
@@ -58,16 +59,24 @@ class DuplicateGroupsIter:
         if si not in self.groups:
             i = next(self.id)
             self.groups[si][i] = file
+            self.hash_idx[i] = si
             return (i, file)
         else:
             r = _find(self.groups[si].items(), lambda f: _cmp(f, file))
             if r is None:
                 i = next(self.id)
                 self.groups[si][i] = file
+                self.hash_idx[i] = si
                 return (i, file)
             else:
                 i = r
                 return (i, file)
+    
+    def get_group(self, i):
+        return self.groups[self.hash_idx[i]][i]
+    
+    def set_group(self, i, v):
+        self.groups[self.hash_idx[i]][i] = v
 
 
 def handle_duplicates(target, global_option):
@@ -77,22 +86,18 @@ def handle_duplicates(target, global_option):
     files = flat_walk(target)
     suspect_groups = _suspect_groups_iter(files)
     duplicate_groups = DuplicateGroupsIter(suspect_groups)
-    for_removal = []
 
     for id, file in duplicate_groups:
         if id in duplicate_groups.groups:
             (global_option, new_path) = _handle_pair(
-                for_removal, global_option, duplicate_groups.groups[id], file
+                global_option, duplicate_groups.get_group(id), file
             )
-            duplicate_groups.groups[id] = new_path
+            duplicate_groups.set_group(id, new_path)
             if global_option == "skip":
                 break
 
-    for f in for_removal:
-        f.unlink()
 
-
-def _handle_pair(for_removal, global_option, file1: Path, file2: Path):
+def _handle_pair(global_option, file1: Path, file2: Path):
     """
     Handles a pair of duplicate files.
     """
@@ -106,10 +111,10 @@ def _handle_pair(for_removal, global_option, file1: Path, file2: Path):
             global_option = option
 
     if option == "rm-young":
-        for_removal.append(young)
+        young.unlink()
         return (global_option, old)
     elif option == "rm-old":
-        for_removal.append(old)
+        old.unlink()
         return (global_option, young)
     else:
         return (global_option, file1)
