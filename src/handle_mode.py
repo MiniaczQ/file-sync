@@ -43,19 +43,14 @@ def handle_mode(target, global_option, pattern):
     """
     files = flat_walk(target)
     matcher = _create_matcher(pattern)
-    for_change = []
 
     for file in _mode_iter(files, matcher):
-        global_option = _handle(for_change, global_option, file, matcher)
+        global_option = _handle(global_option, file, matcher)
         if global_option == "skip":
             break
 
-    for f in for_change:
-        new_mode = _fit_mode(f, matcher)
-        f.chmod(new_mode)
 
-
-def _handle(for_change, global_option, file: Path, matcher):
+def _handle(global_option, file: Path, matcher):
     """
     Handles a single file with invalid mode.
     """
@@ -67,7 +62,8 @@ def _handle(for_change, global_option, file: Path, matcher):
             global_option = option
 
     if option == "ch-all":
-        for_change.append(file)
+        new_mode = _fit_mode(file, matcher)
+        file.chmod(new_mode)
 
     return global_option
 

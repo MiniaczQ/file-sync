@@ -26,18 +26,14 @@ def handle_empty(target, global_option):
     Performs actions on empty files.
     """
     files = flat_walk(target)
-    for_removal = []
 
     for file in _empty_iter(files):
-        global_option = _handle(for_removal, global_option, file)
+        global_option = _handle(global_option, file)
         if global_option == "skip":
             break
 
-    for f in for_removal:
-        f.unlink()
 
-
-def _handle(for_removal, global_option, file: Path):
+def _handle(global_option, file: Path):
     """
     Handles a single empty file.
     """
@@ -49,7 +45,7 @@ def _handle(for_removal, global_option, file: Path):
             global_option = option
 
     if option == "rm-all":
-        for_removal.append(file)
+        file.unlink()
 
     return global_option
 

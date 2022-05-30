@@ -25,18 +25,14 @@ def handle_endings(target, global_option, endings):
     Performs actions on temporary files.
     """
     files = flat_walk(target)
-    for_removal = []
 
     for file in _endings_iter(files, endings):
-        global_option = _handle(for_removal, global_option, file)
+        global_option = _handle(global_option, file)
         if global_option == "skip":
             break
 
-    for f in for_removal:
-        f.unlink()
 
-
-def _handle(for_removal, global_option, file: Path):
+def _handle(global_option, file: Path):
     """
     Handles a single temporary file.
     """
@@ -48,7 +44,7 @@ def _handle(for_removal, global_option, file: Path):
             global_option = option
 
     if option == "rm-all":
-        for_removal.append(file)
+        file.unlink()
 
     return global_option
 
