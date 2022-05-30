@@ -1,6 +1,6 @@
 from pathlib import Path
-from flat_walk import flat_walk
-from prompt import prompt
+from .flat_walk import flat_walk
+from .prompt import prompt
 
 
 def _endings_iter(iter, endings):

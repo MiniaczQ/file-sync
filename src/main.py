@@ -1,13 +1,13 @@
 from pathlib import Path
-from args import parse_args
-from config import load_config
-from handle_duplicates import handle_duplicates
-from handle_empty import handle_empty
-from handle_copy import handle_copy
-from handle_namesakes import handle_namesakes
-from handle_mode import handle_mode
-from handle_illnamed import handle_illnamed
-from handle_endings import handle_endings
+from .args import parse_args
+from .config import load_config
+from .handle_duplicates import handle_duplicates
+from .handle_empty import handle_empty
+from .handle_copy import handle_copy
+from .handle_namesakes import handle_namesakes
+from .handle_mode import handle_mode
+from .handle_illnamed import handle_illnamed
+from .handle_endings import handle_endings
 
 
 def run_action(action, option, target, sources, config):

@@ -1,8 +1,8 @@
 from os import path
 from pathlib import Path
-from flat_walk import flat_walk
+from .flat_walk import flat_walk
 
-from prompt import prompt
+from .prompt import prompt
 
 
 def _empty_iter(iter):

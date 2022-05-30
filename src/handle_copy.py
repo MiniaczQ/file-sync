@@ -1,10 +1,10 @@
 from collections import deque
 from pathlib import Path
 from shutil import copy
-from flat_walk import flat_walk
-from handle_duplicates import DuplicateGroupsIter
-from hash import mass_hash
-from prompt import prompt
+from .flat_walk import flat_walk
+from .handle_duplicates import DuplicateGroupsIter
+from .hash import mass_hash
+from .prompt import prompt
 
 
 def consume(iterator):

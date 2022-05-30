@@ -3,11 +3,11 @@ import filecmp
 from functools import lru_cache
 from itertools import count
 from pathlib import Path
-from flat_walk import flat_walk
+from .flat_walk import flat_walk
 
-from hash import mass_hash
-from prompt import prompt
-from utility import order_files
+from .hash import mass_hash
+from .prompt import prompt
+from .utility import order_files
 
 
 @lru_cache(None)

@@ -1,10 +1,10 @@
 from collections import defaultdict
 from itertools import count
 from pathlib import Path
-from flat_walk import flat_walk
-from prompt import prompt
+from .flat_walk import flat_walk
+from .prompt import prompt
 
-from utility import order_files
+from .utility import order_files
 
 
 def _namesake_groups_iter(iter):
