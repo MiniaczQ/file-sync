@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 
 def _validate_mode_pattern(pattern) -> bool:
@@ -29,11 +30,11 @@ class Config:
         self.substitute = substitute
 
 
-def load_config():
+def load_config(path=Path("config.json")):
     """
     Loads and validates the config file.
     """
-    with open("config.json", "r") as f:
+    with open(path, "r") as f:
         config = json.load(f)
 
         pattern = config.pop("pattern", "__________")

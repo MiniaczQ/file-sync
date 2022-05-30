@@ -29,10 +29,10 @@ def run_action(action, option, target, sources, config):
 
 def main():
     args = parse_args()
-    config = load_config()
+    config = load_config(args.config)
 
     target = Path(args.target)
-    sources = (Path(s) for s in args.sources)
+    sources = (Path(s) for s in args.source)
 
     for (action, option) in args.action_queue:
         run_action(action, option, target, sources, config)

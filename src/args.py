@@ -1,7 +1,6 @@
 import argparse
 from collections import deque
 from pathlib import Path
-from queue import Queue
 
 
 class MyAction(argparse.Action):
@@ -39,10 +38,16 @@ def parse_args():
     parser.add_argument(
         "-s",
         "--source",
-        dest="sources",
+        dest="source",
         action="append",
         default=[],
         help="One or more source directories.",
+    )
+    parser.add_argument(
+        "--config",
+        dest="config",
+        action="store",
+        help="Custom configuration file.",
     )
     parser.add_argument(
         "-c",
@@ -114,15 +119,19 @@ def parse_args():
         print("No actions provided.")
         exit()
 
-    if len(args.sources) == 0 and any(x[0] == "move" for x in args.action_queue):
-        print(f"Move action is invalid without source directories.")
+    if len(args.source) == 0 and any(x[0] == "copy" for x in args.action_queue):
+        print(f"Copy action is invalid without source directories.")
+        exit()
+
+    if len(args.source) > 0 and all(x[0] != "copy" for x in args.action_queue):
+        print(f"Source directories are invalid without copy action.")
         exit()
 
     if not Path(args.target).is_dir():
         print(f"Target directory `{args.target}` is invalid.")
         exit()
 
-    for source in args.sources:
+    for source in args.source:
         if not Path(source).is_dir():
             print(f"Source directory `{source}` is invalid.")
             exit()
