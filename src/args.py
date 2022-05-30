@@ -105,12 +105,12 @@ def parse_args():
     )
     parser.add_argument(
         "-i",
-        "--illnamed",
+        "--ill-named",
         name="illnamed",
         dest="re-all",
         options=["re-all"],
         action=MyAction,
-        help="Check for illnamed (using blacklisted characters) files in target directory. Add `re-all` to rename all.",
+        help="Check for ill-named (using blacklisted characters) files in target directory. Add `re-all` to rename all.",
     )
 
     args = parser.parse_args()
