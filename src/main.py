@@ -3,10 +3,10 @@ from args import parse_args
 from config import load_config
 from handle_duplicates import handle_duplicates
 from handle_empty import handle_empty
-from handle_move import handle_move
+from handle_copy import handle_copy
 from handle_namesakes import handle_namesakes
 from handle_mode import handle_mode
-from handle_symbols import handle_symbols
+from handle_illnamed import handle_illnamed
 from handle_endings import handle_endings
 
 
@@ -19,12 +19,12 @@ def run_action(action, option, target, sources, config):
         handle_endings(target, option, config.endings)
     elif action == "mode":
         handle_mode(target, option, config.pattern)
-    elif action == "move":
-        handle_move(target, sources, option)
+    elif action == "copy":
+        handle_copy(target, sources, option)
     elif action == "namesakes":
         handle_namesakes(target, option)
-    elif action == "symbols":
-        handle_symbols(target, option, config.symbols, config.substitute)
+    elif action == "illnamed":
+        handle_illnamed(target, option, config.symbols, config.substitute)
 
 
 def main():

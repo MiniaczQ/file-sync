@@ -45,13 +45,13 @@ def parse_args():
         help="One or more source directories.",
     )
     parser.add_argument(
-        "-m",
-        "--move",
-        name="move",
+        "-c",
+        "--copy",
+        name="copy",
         dest="rm-all",
-        options=["rm-all"],
+        options=["cp-all"],
         action=MyAction,
-        help="Move missing files from source directories to target directory. Add `rm-all` to remove all.",
+        help="Copy missing files from source directories to target directory. Add `cp-all` to copy all.",
     )
     parser.add_argument(
         "-d",
@@ -90,22 +90,22 @@ def parse_args():
         help="Check for files that are temporary in target directory. Add `rm-all` to remove all.",
     )
     parser.add_argument(
-        "-r",
-        "--rights",
+        "-m",
+        "--mode",
         name="mode",
         dest="ch-all",
         options=["ch-all"],
         action=MyAction,
-        help="Check for unusual rights in files metadata in target directory. Add `ch-all` to change all.",
+        help="Check for unusual file modes in target directory. Add `ch-all` to change all.",
     )
     parser.add_argument(
-        "-c",
-        "--characters",
-        name="symbols",
+        "-i",
+        "--illnamed",
+        name="illnamed",
         dest="re-all",
         options=["re-all"],
         action=MyAction,
-        help="Check for problematic characters in file names in target directory. Add `re-all` to rename all.",
+        help="Check for illnamed files (blacklisted characters) in target directory. Add `re-all` to rename all.",
     )
 
     args = parser.parse_args()

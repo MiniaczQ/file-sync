@@ -18,65 +18,50 @@ def _cmp(a, b) -> bool:
     return filecmp.cmp(a, b, shallow=False)
 
 
-def _find(h, p):
+def _find(paths, predicate):
     """
     Finds the key of first element that fits the predicate.
     """
-    i = (k for k, v in h if p(v))
+    i = (k for k, path in paths if predicate(path))
     r = next(i)
     return r if r != StopIteration else None
-
-
-def _suspect_groups_iter(iter):
-    """
-    Groups all files by their hashes.
-    Files with the same hash are suspected to be duplicates.
-    """
-    id = count(0, 1)
-
-    suspect_groups = {}
-    for hash, file in mass_hash(iter):
-        if hash not in suspect_groups:
-            suspect_groups[hash] = next(id)
-        yield (suspect_groups[hash], file)
 
 
 class DuplicateGroupsIter:
     """
     Iterator over pairs of duplicate group id and file.
     """
+
     def __init__(self, iter):
         self.id = count(0, 1)
-        self.groups = defaultdict(dict)
-        self.hash_idx = {}
+        self.groups = dict()
+        self.hash_groups = defaultdict(list)
         self.iter = iter
-    
+
     def __iter__(self):
         return self
-    
+
     def __next__(self):
-        (si, file) = next(self.iter)
-        if si not in self.groups:
+        (h, file) = next(self.iter)
+        if h not in self.hash_groups:
             i = next(self.id)
-            self.groups[si][i] = file
-            self.hash_idx[i] = si
+            self.hash_groups[h].append(i)
+            self.groups[i] = file
             return (i, file)
         else:
-            r = _find(self.groups[si].items(), lambda f: _cmp(f, file))
+            r = _find(((i, self.groups[i]) for i in self.hash_groups[h]), lambda f: _cmp(f, file))
             if r is None:
                 i = next(self.id)
-                self.groups[si][i] = file
-                self.hash_idx[i] = si
+                self.hash_groups[h].append(i)
+                self.groups[i] = file
                 return (i, file)
             else:
-                i = r
-                return (i, file)
-    
-    def get_group(self, i):
-        return self.groups[self.hash_idx[i]][i]
-    
-    def set_group(self, i, v):
-        self.groups[self.hash_idx[i]][i] = v
+                return (r, file)
+
+    def successor(self, predecessor):
+        self.id = predecessor.id
+        self.groups = predecessor.groups
+        self.hash_groups = predecessor.hash_groups
 
 
 def handle_duplicates(target, global_option):
@@ -84,15 +69,15 @@ def handle_duplicates(target, global_option):
     Performs actions on pairs of duplicate files.
     """
     files = flat_walk(target)
-    suspect_groups = _suspect_groups_iter(files)
+    suspect_groups = mass_hash(files)
     duplicate_groups = DuplicateGroupsIter(suspect_groups)
 
     for id, file in duplicate_groups:
         if id in duplicate_groups.groups:
             (global_option, new_path) = _handle_pair(
-                global_option, duplicate_groups.get_group(id), file
+                global_option, duplicate_groups.groups[id], file
             )
-            duplicate_groups.set_group(id, new_path)
+            duplicate_groups.groups[id] = new_path
             if global_option == "skip":
                 break
 

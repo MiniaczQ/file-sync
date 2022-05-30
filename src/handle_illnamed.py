@@ -19,7 +19,7 @@ def find_symbols(iter, symbols):
     return list(_symbols_iter(iter, symbols))
 
 
-def handle_symbols(target, global_option, symbols, substitute):
+def handle_illnamed(target, global_option, symbols, substitute):
     """
     Performs actions on ill-named files.
     """
@@ -50,7 +50,9 @@ def _handle(global_option, file: Path, symbols, substitute):
         if not renamed.exists():
             file.rename(renamed)
         else:
-            print(f"File `{file}` cannot be renamed, because `{renamed}` already exists.")
+            print(
+                f"File `{file}` cannot be renamed, because `{renamed}` already exists."
+            )
 
     return global_option
 
