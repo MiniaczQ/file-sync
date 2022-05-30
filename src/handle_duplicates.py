@@ -49,7 +49,10 @@ class DuplicateGroupsIter:
             self.groups[i] = file
             return (i, file)
         else:
-            r = _find(((i, self.groups[i]) for i in self.hash_groups[h]), lambda f: _cmp(f, file))
+            r = _find(
+                ((i, self.groups[i]) for i in self.hash_groups[h]),
+                lambda f: _cmp(f, file),
+            )
             if r is None:
                 i = next(self.id)
                 self.hash_groups[h].append(i)
@@ -73,7 +76,7 @@ def handle_duplicates(target, global_option):
     duplicate_groups = DuplicateGroupsIter(suspect_groups)
 
     for id, file in duplicate_groups:
-        if id in duplicate_groups.groups:
+        if duplicate_groups.groups[id] != file:
             (global_option, new_path) = _handle_pair(
                 global_option, duplicate_groups.groups[id], file
             )
