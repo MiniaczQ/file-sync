@@ -41,7 +41,7 @@ def parse_args():
         dest="source",
         action="append",
         default=[],
-        help="One or more source directories.",
+        help="A source directory. Use multiple times for multiple source directories.",
     )
     parser.add_argument(
         "--config",
@@ -56,7 +56,7 @@ def parse_args():
         dest="rm-all",
         options=["cp-all"],
         action=MyAction,
-        help="Copy missing files from source directories to target directory. Add `cp-all` to copy all.",
+        help="Copy missing (content-wise) files from source directories to target directory. Add `cp-all` to copy all.",
     )
     parser.add_argument(
         "-d",
@@ -101,7 +101,7 @@ def parse_args():
         dest="ch-all",
         options=["ch-all"],
         action=MyAction,
-        help="Check for unusual file modes in target directory. Add `ch-all` to change all.",
+        help="Check for unusual file modes (like rwxrwxrwx) in target directory. Add `ch-all` to change all.",
     )
     parser.add_argument(
         "-i",
@@ -110,7 +110,7 @@ def parse_args():
         dest="re-all",
         options=["re-all"],
         action=MyAction,
-        help="Check for illnamed files (blacklisted characters) in target directory. Add `re-all` to rename all.",
+        help="Check for illnamed (using blacklisted characters) files in target directory. Add `re-all` to rename all.",
     )
 
     args = parser.parse_args()
