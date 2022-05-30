@@ -24,23 +24,14 @@ def handle_symbols(target, global_option, symbols, substitute):
     Performs actions on ill-named files.
     """
     files = flat_walk(target)
-    for_rename = []
 
     for file in _symbols_iter(files, symbols):
-        global_option = _handle(for_rename, global_option, file, symbols, substitute)
+        global_option = _handle(global_option, file, symbols, substitute)
         if global_option == "skip":
             break
 
-    for f in for_rename:
-        name = _renamed(f, symbols, substitute)
-        renamed = f.with_name(name)
-        if not renamed.exists():
-            f.rename(renamed)
-        else:
-            print(f"File `{f}` cannot be renamed, because `{renamed}` already exists.")
 
-
-def _handle(for_rename, global_option, file: Path, symbols, substitute):
+def _handle(global_option, file: Path, symbols, substitute):
     """
     Handles a single ill-named file.
     """
@@ -54,7 +45,12 @@ def _handle(for_rename, global_option, file: Path, symbols, substitute):
             global_option = option
 
     if option == "re-all":
-        for_rename.append(file)
+        name = _renamed(file, symbols, substitute)
+        renamed = file.with_name(name)
+        if not renamed.exists():
+            file.rename(renamed)
+        else:
+            print(f"File `{file}` cannot be renamed, because `{renamed}` already exists.")
 
     return global_option
 
