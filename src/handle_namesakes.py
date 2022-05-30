@@ -39,7 +39,6 @@ def handle_namesakes(target, global_option):
     Performs actions on pairs of namesake files.
     """
     files = flat_walk(target)
-    for_removal = []
 
     groups = {}
     for id, file in _namesake_groups_iter(files):
@@ -47,17 +46,14 @@ def handle_namesakes(target, global_option):
             groups[id] = file
         else:
             (global_option, new_path) = _handle_pair(
-                for_removal, global_option, groups[id], file
+                global_option, groups[id], file
             )
             groups[id] = new_path
             if global_option == "skip":
                 break
 
-    for f in for_removal:
-        f.unlink()
 
-
-def _handle_pair(for_removal, global_option, file1: Path, file2: Path):
+def _handle_pair(global_option, file1: Path, file2: Path):
     """
     Handles a pair of namesake files.
     """
@@ -71,10 +67,10 @@ def _handle_pair(for_removal, global_option, file1: Path, file2: Path):
             global_option = option
 
     if option == "rm-young":
-        for_removal.append(young)
+        young.unlink()
         return (global_option, old)
     elif option == "rm-old":
-        for_removal.append(old)
+        old.unlink()
         return (global_option, young)
     else:
         return (global_option, file1)
