@@ -1,0 +1,8 @@
+{
+    "pattern": "rwxrw-___",
+    "symbols": "!$#|\\",
+    "substitute": "-",
+    "endings": [
+        ".tmp"
+    ]
+}

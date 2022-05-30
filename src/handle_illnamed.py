@@ -85,6 +85,9 @@ def _answer_handler(answer):
 
 
 def _renamed(file: Path, symbols, substitute):
+    """
+    File after substituting all the symbols.
+    """
     name = file.name
     for s in symbols:
         name = name.replace(s, substitute)

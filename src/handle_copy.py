@@ -46,25 +46,26 @@ def _handle(global_option, file: Path, target: Path, source: Path):
     """
     option = global_option
 
+    new_file = target / file.relative_to(source)
+
     if option == "interact":
-        (all, option) = prompt(_prep_message(file), _answer_handler)
+        (all, option) = prompt(_prep_message(file, new_file), _answer_handler)
         if all:
             global_option = option
 
     if option == "cp-all":
-        new_file = target / file.relative_to(source)
         copy(file, new_file)
 
     return global_option
 
 
-def _prep_message(file: Path):
+def _prep_message(file: Path, new_file: Path):
     """
     Perpares prompt message.
     """
     return f"""\
 File `{file}` is missing from target directory.
-Copy?
+Copy it to `{new_file}`?
 [a]c - copy [all]
 [a]s - skip [all]\
 """

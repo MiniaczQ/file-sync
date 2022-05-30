@@ -12,6 +12,9 @@ def prompt(message, handler):
 
 
 def _grab(message):
+    """
+    Prints a message and grabs user input.
+    """
     print()
     print(message)
     return input()

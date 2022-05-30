@@ -3,7 +3,11 @@ from collections import deque
 from pathlib import Path
 
 
-class MyAction(argparse.Action):
+class TriStateAction(argparse.Action):
+    """
+    Flag that can be `off`, `on` or with a custom argument.
+    """
+
     def __init__(self, option_strings, name="", options=[], **kwargs):
         kwargs["nargs"] = "?"
         kwargs["default"] = None
@@ -33,7 +37,9 @@ def parse_args():
     Parses and validates command line arguments.
     """
 
-    parser = argparse.ArgumentParser(description="File synchronization utility.")
+    parser = argparse.ArgumentParser(
+        description="Action-based file management utility.\nActions are performed only on the target directory.\nMultiple actions can be performed.\nThe action order is left to right."
+    )
     parser.add_argument("target", help="Target directory.")
     parser.add_argument(
         "-s",
@@ -55,8 +61,8 @@ def parse_args():
         name="copy",
         dest="rm-all",
         options=["cp-all"],
-        action=MyAction,
-        help="Copy missing (content-wise) files from source directories to target directory. Add `cp-all` to copy all.",
+        action=TriStateAction,
+        help="Copy missing (content-wise) files from source directories to target directory.\nAdd `cp-all` to copy all.",
     )
     parser.add_argument(
         "-d",
@@ -64,8 +70,8 @@ def parse_args():
         name="duplicates",
         dest="rm-old|rm-young",
         options=["rm-old", "rm-young"],
-        action=MyAction,
-        help="Check for files that have the same content in target directory. Add `rm-old` or `rm-young` to remove all.",
+        action=TriStateAction,
+        help="Check for files that have the same content in target directory.\nAdd `rm-old` or `rm-young` to remove all.",
     )
     parser.add_argument(
         "-e",
@@ -73,8 +79,8 @@ def parse_args():
         name="empty",
         dest="rm-all",
         options=["rm-all"],
-        action=MyAction,
-        help="Check for files that are empty in target directory. Add `rm-all` to remove all.",
+        action=TriStateAction,
+        help="Check for files that are empty in target directory.\nAdd `rm-all` to remove all.",
     )
     parser.add_argument(
         "-n",
@@ -82,8 +88,8 @@ def parse_args():
         name="namesakes",
         dest="rm-old|rm-young",
         options=["rm-old", "rm-young"],
-        action=MyAction,
-        help="Check for files that have the same name in target directory. Add `rm-old` or `rm-young` to remove all.",
+        action=TriStateAction,
+        help="Check for files that have the same name in target directory.\nAdd `rm-old` or `rm-young` to remove all.",
     )
     parser.add_argument(
         "-t",
@@ -91,8 +97,8 @@ def parse_args():
         name="endings",
         dest="rm-all",
         options=["rm-all"],
-        action=MyAction,
-        help="Check for files that are temporary in target directory. Add `rm-all` to remove all.",
+        action=TriStateAction,
+        help="Check for files that are temporary in target directory.\nAdd `rm-all` to remove all.",
     )
     parser.add_argument(
         "-m",
@@ -100,8 +106,8 @@ def parse_args():
         name="mode",
         dest="ch-all",
         options=["ch-all"],
-        action=MyAction,
-        help="Check for unusual file modes (like rwxrwxrwx) in target directory. Add `ch-all` to change all.",
+        action=TriStateAction,
+        help="Check for unusual file modes (like rwxrwxrwx) in target directory.\nAdd `ch-all` to change all.",
     )
     parser.add_argument(
         "-i",
@@ -109,8 +115,8 @@ def parse_args():
         name="illnamed",
         dest="re-all",
         options=["re-all"],
-        action=MyAction,
-        help="Check for ill-named (using blacklisted characters) files in target directory. Add `re-all` to rename all.",
+        action=TriStateAction,
+        help="Check for ill-named (using blacklisted characters) files in target directory.\nAdd `re-all` to rename all.",
     )
 
     args = parser.parse_args()

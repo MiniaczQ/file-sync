@@ -11,6 +11,9 @@ from handle_endings import handle_endings
 
 
 def run_action(action, option, target, sources, config):
+    """
+    Performs a single action.
+    """
     if action == "duplicates":
         handle_duplicates(target, option)
     elif action == "empty":
@@ -28,6 +31,9 @@ def run_action(action, option, target, sources, config):
 
 
 def main():
+    """
+    Main program.
+    """
     args = parse_args()
     config = load_config(args.config)
 
