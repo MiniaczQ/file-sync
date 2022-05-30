@@ -30,10 +30,13 @@ class Config:
         self.substitute = substitute
 
 
-def load_config(path=Path("config.json")):
+def load_config(path=None):
     """
     Loads and validates the config file.
     """
+    if path is None:
+        path = Path("config.json")
+
     with open(path, "r") as f:
         config = json.load(f)
 
