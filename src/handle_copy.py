@@ -54,7 +54,10 @@ def _handle(global_option, file: Path, target: Path, source: Path):
             global_option = option
 
     if option == "cp-all":
-        copy(file, new_file)
+        if not new_file.exists():
+            copy(file, new_file)
+        else:
+            print(f"Cannot copy file `{file}`, because `{new_file}` already exists.")
 
     return global_option
 

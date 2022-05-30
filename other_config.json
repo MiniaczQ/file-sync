@@ -1,5 +1,5 @@
 {
-    "pattern": "rwxrw-___",
+    "pattern": "r-xr-__-_",
     "symbols": "!$#|\\",
     "substitute": "-",
     "endings": [
